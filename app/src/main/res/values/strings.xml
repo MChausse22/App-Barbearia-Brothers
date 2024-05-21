@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Barbearia Brothers</string>
+    <string name="login">Login</string>
+    <string name="cadastro">Cadastro</string>
+    <string name="email_hint">username</string>
+    <string name="pass_hint">password</string>
+</resources>

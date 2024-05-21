@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538186269574",
+    "project_id": "barbearia-brothers-d9052",
+    "storage_bucket": "barbearia-brothers-d9052.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538186269574:android:129912a22021cd662e6207",
+        "android_client_info": {
+          "package_name": "com.example.barbeariabrothers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4ftrfuJPBujyBdqlJoJVWVwA0YXp1JkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
