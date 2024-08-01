@@ -1,38 +1,27 @@
 package com.example.barbeariabrothers;
 
 public class BarberClass {
-    String name, password, username, service, userBarber;
+    String id, name, serviceID;
 
-    public BarberClass(String name, String username, String service) {
+    public BarberClass(String name, String id, String serviceID) {
         this.name = name;
-        this.username = username;
-        this.service = service;
-    }
-    public BarberClass(String name, String username, String service, String userBarber) {
-        this.name = name;
-        this.username = username;
-        this.service = service;
-        this.userBarber = userBarber;
-    }
-    public BarberClass(String name) {
-        this.name = name;
+        this.id = id;
+        this.serviceID = serviceID;
     }
 
+    public BarberClass() {
+
+    }
+
+    public String getServiceID() {
+        return serviceID;
+    }
     public String getName() {
         return name;
     }
-    public String getPassword() {
-        return password;
+
+    public String getId() {
+        return id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-    public String getService() {
-        return service;
-    }
-
-    public String getUserBarber() {
-        return userBarber;
-    }
 }

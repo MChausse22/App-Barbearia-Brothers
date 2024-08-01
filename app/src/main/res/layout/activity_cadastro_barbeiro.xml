@@ -93,14 +93,15 @@
                 android:textColor="@color/dark_gray" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:background="@drawable/btn_background"
                 android:id="@+id/signupButton_b"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="25dp"
+                android:background="@drawable/btn_background"
                 android:text="Cadastrar"
                 android:textColor="@color/dark_gray"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/loginRedirect_b"
                 android:layout_width="match_parent"

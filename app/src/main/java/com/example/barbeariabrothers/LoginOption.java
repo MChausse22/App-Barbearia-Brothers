@@ -12,8 +12,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class LoginOption extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
 
+public class LoginOption extends AppCompatActivity {
+    private FirebaseAuth auth;
     AppCompatButton btnBarbeiro;
     AppCompatButton btnCliente;
 
@@ -28,11 +30,22 @@ public class LoginOption extends AppCompatActivity {
             return insets;
         });
 
+        auth = FirebaseAuth.getInstance();
+
         btnBarbeiro = findViewById(R.id.btnBarbeiro);
         btnCliente = findViewById(R.id.btnCliente);
 
         setBtnBarbeiroOnClick();
         setBtnClienteOnClick();
+        checkLoggedInState();
+    }
+
+    private void checkLoggedInState(){
+        if (auth.getCurrentUser() != null){
+            Intent intent = new Intent(LoginOption.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void setBtnBarbeiroOnClick(){

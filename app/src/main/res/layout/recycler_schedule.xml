@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rc_scheduleBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="4dp"
+    android:layout_marginHorizontal="8dp"
+    android:background="@drawable/radio_checked"
+    android:button="@android:color/transparent"
+    android:elevation="1dp"
+    android:padding="16dp"
+    android:text="09:00"
+    android:textColor="@color/dark_gray"
+    android:textStyle="bold"
+    android:textSize="14sp">
+
+</androidx.appcompat.widget.AppCompatRadioButton>

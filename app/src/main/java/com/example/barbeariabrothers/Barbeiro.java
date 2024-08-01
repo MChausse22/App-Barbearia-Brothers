@@ -45,7 +45,6 @@ public class Barbeiro extends AppCompatActivity {
 
         recyclerView = binding.rcView;
 
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(Barbeiro.this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -53,21 +52,21 @@ public class Barbeiro extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
+        Toast.makeText(this, "ServiceID = " + getServiceID(), Toast.LENGTH_SHORT).show();
 
         eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                barberList.clear();
-                String name, service, username, userBarber;
+                //barberList.clear();
+                String name, id;
 
                 for (DataSnapshot itemSnapshot: snapshot.getChildren()){
+                    id = itemSnapshot.getKey();
                     name = itemSnapshot.child("name").getValue().toString();
-                    userBarber = itemSnapshot.getKey();
 
-                    username = getUsername();
-                    service = getService();
+                    String serviceID = getServiceID();
 
-                    barberList.add(new BarberClass(name, username, service, userBarber));
+                    barberList.add(new BarberClass(name, id, serviceID));
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -77,17 +76,14 @@ public class Barbeiro extends AppCompatActivity {
 
             }
         });
-
-
     }
 
-    private String getUsername(){
+    public String getServiceID(){
         Intent intent = getIntent();
-        String username = intent.getStringExtra("Username");
-        return username;
+        String serviceID;
+
+        serviceID = intent.getStringExtra("ServiceID");
+        return serviceID;
     }
-    private String getService(){
-        Intent intent = getIntent();
-        return intent.getStringExtra("Service");
-    }
+
 }

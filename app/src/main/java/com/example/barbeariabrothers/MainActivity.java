@@ -2,7 +2,10 @@ package com.example.barbeariabrothers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.barbeariabrothers.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,14 +34,24 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final String USERNAME = "user";
+   // public static final String CURRENT_USER_ID = "currentUserID";
     private ActivityMainBinding binding;
+    private FirebaseAuth mAuth;
     private FirebaseDatabase database;
-    private DatabaseReference reference;
+    private DatabaseReference clientsRef;
     private ValueEventListener eventListener;
+    private String currentUserID;
+    private String filterStatus = "all";
     List<AgendamentoClass> agendamentoList = new ArrayList<>();
     TextView homeName;
-    AppCompatButton btnNew;
+    AppCompatButton btnNew, btnLogout;
     RecyclerView recyclerView;
+    RadioGroup radioGroup;
+    RadioButton filterAll, filterConfirmed, filterCanceled, filterFinished;
+    String appointmentID, barberID, serviceID, day, month, year, hour, status;
+    int statusID;
+    String serviceName, barberName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,65 +65,192 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        homeName = binding.homeName;
+        //homeName = binding.homeName;
         btnNew = binding.btnNew;
         recyclerView = binding.rcAgendamentos;
+        radioGroup = binding.radioGroup;
+        filterAll = binding.filterBtnAll;
+        filterCanceled = binding.filterBtnCanceled;
+        filterConfirmed = binding.filterBtnConfirmed;
+        filterFinished = binding.filterBtnFinished;
+        btnLogout = binding.btnLogout;
+
+        filterAll.setChecked(true);
+        filterAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "all";
+                displayAgendamentos();
+            }
+        });
+        filterConfirmed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Confirmed";
+                displayAgendamentos();
+            }
+        });
+        filterFinished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Finished";
+                displayAgendamentos();
+            }
+        });
+        filterCanceled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Canceled";
+                displayAgendamentos();
+            }
+        });
 
         database = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
-        showHomeName();
+        //showHomeName();
         setBtnNewOnClickListener();
         displayAgendamentos();
-    }
 
-    public String getUsername(){
-        Intent intent = getIntent();
-        String username = intent.getStringExtra(USERNAME);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(MainActivity.this, LoginOption.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-        return username;
     }
 
     private void displayAgendamentos(){
+        agendamentoList.clear();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         AgendamentoClienteAdapter adapter = new AgendamentoClienteAdapter(MainActivity.this, agendamentoList);
         recyclerView.setAdapter(adapter);
 
-        reference = database.getReference("users").child(getUsername()).child("agendamentos");
-
-        eventListener = reference.addValueEventListener(new ValueEventListener() {
+        clientsRef = database.getReference("clients");
+        DatabaseReference barbersRef = database.getReference("barbers");
+        DatabaseReference appointmentsRef = database.getReference("appointments");
+        DatabaseReference servicesRef = database.getReference("services");
+        ValueEventListener clientListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 agendamentoList.clear();
-
-                String day, month, service, barber;
-
                 for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                    day = itemSnapshot.child("day").getValue().toString();
-                    month = itemSnapshot.child("month").getValue().toString();
-                    service = itemSnapshot.child("service").getValue().toString();
-                    barber = itemSnapshot.child("barber").getValue().toString();
+                    AgendamentoClass agendamentoClass = new AgendamentoClass();
 
-                    agendamentoList.add(new AgendamentoClass(day, month, barber, service));
+                    appointmentID = itemSnapshot.getKey();
+                    agendamentoClass.setId(appointmentID);
+
+                    ValueEventListener appointmentListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            barberID = snapshot.child("barberID").getValue(String.class);
+                            serviceID = snapshot.child("serviceID").getValue(String.class);
+                            day = snapshot.child("day").getValue(String.class);
+                            month = snapshot.child("month").getValue(String.class);
+                            year = snapshot.child("year").getValue(String.class);
+                            hour = snapshot.child("hour").getValue(String.class);
+                            status = snapshot.child("status").getValue(String.class);
+
+                            statusID = snapshot.child("statusID").getValue(Integer.class);
+
+                            agendamentoClass.setDay(day);
+                            agendamentoClass.setMonth(month);
+                            agendamentoClass.setYear(year);
+                            agendamentoClass.setHour(hour);
+                            agendamentoClass.setStatus(status);
+                            agendamentoClass.setStatusID(statusID);
+                            ValueEventListener serviceListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    serviceName = snapshot.child("name").getValue(String.class);
+
+                                    agendamentoClass.setServiceID(serviceName);
+
+                                    ValueEventListener barberListener = new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            barberName = snapshot.child("name").getValue(String.class);
+
+                                            //AgendamentoClass agendamentoClass = new AgendamentoClass(day, month, year, appointmentID, currentUserID, barberName, serviceName);
+                                            agendamentoClass.setBarberID(barberName);
+
+                                            if (filterStatus.equals("all")) {
+                                                agendamentoList.add(agendamentoClass);
+                                            }
+                                            else if (filterStatus.equals("Confirmed")) {
+                                                if (agendamentoClass.getStatusID() == 1)
+                                                    agendamentoList.add(agendamentoClass);
+                                            }
+                                            else if (filterStatus.equals("Finished")) {
+                                                if (agendamentoClass.getStatusID() == 2){
+                                                    agendamentoList.add(agendamentoClass);
+                                                }
+                                            }
+                                            else if (filterStatus.equals("Canceled")) {
+                                                if (agendamentoClass.getStatusID() == 3){
+                                                    agendamentoList.add(agendamentoClass);
+                                                }
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    };
+                                    barbersRef.child(barberID).addListenerForSingleValueEvent(barberListener);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            };
+                            servicesRef.child(serviceID).addValueEventListener(serviceListener);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    };
+                    appointmentsRef.child(appointmentID).addListenerForSingleValueEvent(appointmentListener);
+                    /*
+                    Query appointmentFilter = appointmentsRef.child(appointmentID).orderByChild("statusID").equalTo(1);
+                    appointmentFilter.addListenerForSingleValueEvent(appointmentListener);
+
+                    else if (filterStatus == 1) {
+                        Query appointmentFilter = appointmentsRef.child(appointmentID).orderByChild("/statusID").equalTo(1);
+                        appointmentFilter.addListenerForSingleValueEvent(appointmentListener);
+                    }
+
+                     */
                 }
-                adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-        });
-       // Toast.makeText(MainActivity.this, agendamentoList.size(), Toast.LENGTH_SHORT).show();
+        };
+        Query query = clientsRef.child(currentUserID).child("appointments")
+                .orderByChild("/date");
+        query.addListenerForSingleValueEvent(clientListener);
     }
 
+/*
     private void showHomeName(){
-        reference = database.getReference("users");
+        clientsRef = database.getReference("clients");
 
-        Query checkUsersDatabase = reference.child(getUsername());
+        Query checkClientsDatabase = clientsRef.child(currentUserID);
 
-        checkUsersDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        checkClientsDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 homeName.setText(snapshot.child("name").getValue().toString());
@@ -122,12 +263,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+ */
+
     private void setBtnNewOnClickListener(){
         btnNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Servicos.class);
-                intent.putExtra("Username", getUsername());
                 startActivity(intent);
             }
         });

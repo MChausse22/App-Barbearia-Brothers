@@ -1,23 +1,23 @@
 package com.example.barbeariabrothers;
 
 public class DataClass {
+    String serviceID;
     String serviceName;
     String serviceTime;
     String servicePrice;
-
-    public String getUsername() {
-        return username;
-    }
-    String username;
-
-    public DataClass(String serviceName, String serviceTime, String servicePrice, String username) {
+    public DataClass(String serviceId, String serviceName, String serviceTime, String servicePrice) {
+        this.serviceID = serviceId;
         this.serviceName = serviceName;
         this.serviceTime = serviceTime;
         this.servicePrice = servicePrice;
-        this.username = username;
     }
-    public DataClass(){}
+    public DataClass(){
 
+    }
+
+    public String getServiceID() {
+        return serviceID;
+    }
     public String getServiceName() {
         return serviceName;
     }

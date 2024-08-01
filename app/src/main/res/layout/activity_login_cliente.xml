@@ -77,15 +77,23 @@
                 android:padding="8dp"
                 android:textColor="@color/dark_gray" />
 
+            <TextView
+                android:id="@+id/txtLogged"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="invisible" />
+
             <androidx.appcompat.widget.AppCompatButton
-                android:background="@drawable/btn_background"
                 android:id="@+id/loginButton_c"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="25dp"
+                android:background="@drawable/btn_background"
                 android:text="@string/login"
                 android:textColor="@color/dark_gray"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/signupRedirect_c"

@@ -1,10 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.BarbeariaBrothers" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BarbeariaBrothers" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:colorPrimary">@color/dark_gray</item>
-        <item name="android:colorSecondary">@color/amber</item>
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <style name="Theme.BarbeariaBrothers" parent="Base.Theme.BarbeariaBrothers" />

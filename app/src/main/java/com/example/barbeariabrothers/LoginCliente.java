@@ -2,6 +2,7 @@ package com.example.barbeariabrothers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +17,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.barbeariabrothers.databinding.ActivityLoginClienteBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginCliente extends AppCompatActivity {
 
     private ActivityLoginClienteBinding binding;
+    private FirebaseAuth auth;
 
     EditText loginUsername, loginPassword;
     AppCompatButton loginButton;
@@ -43,6 +49,9 @@ public class LoginCliente extends AppCompatActivity {
             return insets;
         });
 
+        auth = FirebaseAuth.getInstance();
+        auth.signOut();
+
         loginUsername = binding.loginEmailC;
         loginButton = binding.loginButtonC;
         loginPassword = binding.loginPasswordC;
@@ -52,13 +61,20 @@ public class LoginCliente extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                validateUser();
+
+                /*
+                *
+                * LOGIN COM REALTIME
+
                 if (!validateUsername() || !validatePassword()){}
                 else {
                     checkUser();
                 }
+
+                 */
             }
         });
-
         signupRedirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +84,52 @@ public class LoginCliente extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkLoggedInState();
+    }
+
+    public void validateUser() {
+
+        String email = loginUsername.getText().toString();
+        String psswd = loginPassword.getText().toString();
+
+        if (!email.isEmpty()) {
+            if (!psswd.isEmpty()) {
+                auth.signInWithEmailAndPassword(email, psswd)
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                Toast.makeText(LoginCliente.this, "Login Realizado!", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(LoginCliente.this, MainActivity.class));
+                                finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(LoginCliente.this, "Usuário ou senha incorretos!", Toast.LENGTH_SHORT).show();
+                                loginPassword.setError("");
+                                loginUsername.setError("");
+                            }
+                        });
+            } else {
+                loginPassword.setError("Campo obrigatório");
+            }
+        } else {
+            loginUsername.setError("Campo obrigatório");
+        }
+    }
+
+    private void checkLoggedInState(){
+        if (auth.getCurrentUser() == null){
+            binding.txtLogged.setText("Não logado");
+        } else {
+            binding.txtLogged.setText("Logado");
+        }
+    }
+/*
     public Boolean validateUsername(){
         String email = loginUsername.getText().toString();
         if (email.isEmpty()){
@@ -134,4 +196,6 @@ public class LoginCliente extends AppCompatActivity {
             }
         });
     }
+
+ */
 }

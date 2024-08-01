@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.321"
-        app:srcCompat="@drawable/baseline_check_circle_24" />
+        app:srcCompat="@drawable/check_circle" />
 
     <TextView
         android:id="@+id/textView5"

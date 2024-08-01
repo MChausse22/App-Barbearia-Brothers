@@ -54,22 +54,21 @@ public class Servicos extends AppCompatActivity {
         MyAdapter adapter = new MyAdapter(Servicos.this, dataList);
         recyclerView.setAdapter(adapter);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("servicos");
+        databaseReference = FirebaseDatabase.getInstance().getReference("services");
 
         eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 dataList.clear();
-                String name, time, price, username;
+                String id, name, time, price;
                 for (DataSnapshot itemSnapshot: snapshot.getChildren()){
                     //DataClass dataClass = itemSnapshot.getValue(DataClass.class);
+                    id = itemSnapshot.getKey();
                     name = itemSnapshot.child("name").getValue().toString();
                     price = itemSnapshot.child("price").getValue().toString();
                     time = itemSnapshot.child("time").getValue().toString();
 
-                    username = getUsername();
-
-                    dataList.add(new DataClass(name, time, price, username));
+                    dataList.add(new DataClass(id, name, time, price));
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -80,11 +79,4 @@ public class Servicos extends AppCompatActivity {
             }
         });
     }
-
-    private String getUsername(){
-        Intent intent = getIntent();
-        String username = intent.getStringExtra("Username");
-        return username;
-    }
-
 }

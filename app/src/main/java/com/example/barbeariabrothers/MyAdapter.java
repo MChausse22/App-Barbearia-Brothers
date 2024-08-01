@@ -2,11 +2,12 @@ package com.example.barbeariabrothers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -40,10 +41,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.rcAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Barbeiro.class);
-                intent.putExtra("Username", dataList.get(position).getUsername());
-                intent.putExtra("Service", dataList.get(position).getServiceName());
+                Intent intent = new Intent(context, Agendamento.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ServiceID", dataList.get(position).getServiceID());
+                bundle.putString("BarberID", Integer.toString(1));
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+                ((Activity) context).finish();
             }
         });
     }

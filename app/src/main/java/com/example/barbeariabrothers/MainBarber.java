@@ -2,7 +2,11 @@ package com.example.barbeariabrothers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,9 +37,16 @@ public class MainBarber extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private ValueEventListener eventListener;
+    private String filterStatus = "all";
     List<AgendamentoClass> agendamentoList = new ArrayList<>();
     TextView barberName;
     RecyclerView recyclerView;
+    RadioGroup radioGroup;
+    RadioButton filterAll, filterConfirmed, filterCanceled, filterFinished;
+    AppCompatButton btnLogout;
+    String appointmentID, clientID, serviceID, day, month, year, hour, status;
+    int statusID;
+    String serviceName, clientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,55 +60,183 @@ public class MainBarber extends AppCompatActivity {
             return insets;
         });
 
-        barberName = binding.barberName;
+        //barberName = binding.barberName;
+        btnLogout = binding.btnLogout;
         recyclerView = binding.rcAgendamentos;
+        radioGroup = binding.radioGroup2;
+        filterAll = binding.radioButton;
+        filterConfirmed = binding.radioButton2;
+        filterFinished = binding.radioButton3;
+        filterCanceled = binding.radioButton4;
+
+        filterAll.setChecked(true);
+
+        filterAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "all";
+                displayAgendamentos();
+            }
+        });
+        filterConfirmed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Confirmed";
+                displayAgendamentos();
+            }
+        });
+        filterFinished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Finished";
+                displayAgendamentos();
+            }
+        });
+        filterCanceled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStatus = "Canceled";
+                displayAgendamentos();
+            }
+        });
+
 
         database = FirebaseDatabase.getInstance();
 
-        showHomeName();
+        //showHomeName();
         displayAgendamentos();
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainBarber.this, LoginOption.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
-
-    private String getUsername() {
-        Intent intent = getIntent();
-        String username = intent.getStringExtra(USERNAME);
-
-        return username;
-    }
-
-    private void displayAgendamentos() {
+    private void displayAgendamentos(){
+        agendamentoList.clear();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainBarber.this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         AgendamentoBarberAdapter adapter = new AgendamentoBarberAdapter(MainBarber.this, agendamentoList);
         recyclerView.setAdapter(adapter);
 
-        reference = database.getReference("barbers").child(getUsername()).child("agendamentos");
-
-        eventListener = reference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference clientsRef = database.getReference("clients");
+        DatabaseReference barbersRef = database.getReference("barbers");
+        DatabaseReference appointmentsRef = database.getReference("appointments");
+        DatabaseReference servicesRef = database.getReference("services");
+        ValueEventListener barberListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 agendamentoList.clear();
+                for (DataSnapshot itemSnapshot: snapshot.getChildren()){
+                    AgendamentoClass agendamentoClass = new AgendamentoClass();
 
-                String day, month, service, client, year;
+                    appointmentID = itemSnapshot.getKey();
+                    agendamentoClass.setId(appointmentID);
 
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                    day = itemSnapshot.child("day").getValue().toString();
-                    month = itemSnapshot.child("month").getValue().toString();
-                    year = itemSnapshot.child("year").getValue().toString();
-                    service = itemSnapshot.child("service").getValue().toString();
-                    client = itemSnapshot.child("username").getValue().toString();
+                    ValueEventListener appointmentListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            clientID = snapshot.child("clientID").getValue(String.class);
+                            serviceID = snapshot.child("serviceID").getValue(String.class);
+                            day = snapshot.child("day").getValue(String.class);
+                            month = snapshot.child("month").getValue(String.class);
+                            year = snapshot.child("year").getValue(String.class);
+                            hour = snapshot.child("hour").getValue(String.class);
+                            status = snapshot.child("status").getValue(String.class);
 
-                    agendamentoList.add(new AgendamentoClass(day, month, year, client, service));
+                            statusID = snapshot.child("statusID").getValue(Integer.class);
+
+                            agendamentoClass.setDay(day);
+                            agendamentoClass.setMonth(month);
+                            agendamentoClass.setYear(year);
+                            agendamentoClass.setHour(hour);
+                            agendamentoClass.setStatus(status);
+                            agendamentoClass.setStatusID(statusID);
+                            ValueEventListener serviceListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    serviceName = snapshot.child("name").getValue(String.class);
+
+                                    agendamentoClass.setServiceID(serviceName);
+
+                                    ValueEventListener clientListener = new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            clientName = snapshot.child("name").getValue(String.class);
+
+                                            //AgendamentoClass agendamentoClass = new AgendamentoClass(day, month, year, appointmentID, currentUserID, barberName, serviceName);
+                                            agendamentoClass.setClientID(clientName);
+
+                                            if (filterStatus.equals("all")) {
+                                                agendamentoList.add(agendamentoClass);
+                                            }
+                                            else if (filterStatus.equals("Confirmed")) {
+                                                if (agendamentoClass.getStatusID() == 1)
+                                                    agendamentoList.add(agendamentoClass);
+                                            }
+                                            else if (filterStatus.equals("Finished")) {
+                                                if (agendamentoClass.getStatusID() == 2){
+                                                    agendamentoList.add(agendamentoClass);
+                                                }
+                                            }
+                                            else if (filterStatus.equals("Canceled")) {
+                                                if (agendamentoClass.getStatusID() == 3){
+                                                    agendamentoList.add(agendamentoClass);
+                                                }
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    };
+                                    clientsRef.child(clientID).addListenerForSingleValueEvent(clientListener);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            };
+                            servicesRef.child(serviceID).addValueEventListener(serviceListener);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    };
+                    appointmentsRef.child(appointmentID).addListenerForSingleValueEvent(appointmentListener);
+                    /*
+                    Query appointmentFilter = appointmentsRef.child(appointmentID).orderByChild("statusID").equalTo(1);
+                    appointmentFilter.addListenerForSingleValueEvent(appointmentListener);
+
+                    else if (filterStatus == 1) {
+                        Query appointmentFilter = appointmentsRef.child(appointmentID).orderByChild("/statusID").equalTo(1);
+                        appointmentFilter.addListenerForSingleValueEvent(appointmentListener);
+                    }
+
+                     */
                 }
-                adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-        });
+        };
+        Query query = barbersRef.child(getUsername()).child("appointments")
+                .orderByChild("/date");
+        query.addListenerForSingleValueEvent(barberListener);
+    }
+    private String getUsername() {
+        Intent intent = getIntent();
+        String username = intent.getStringExtra(USERNAME);
+
+        return username;
     }
 
     private void showHomeName() {

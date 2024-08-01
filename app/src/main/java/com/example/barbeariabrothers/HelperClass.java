@@ -2,13 +2,13 @@ package com.example.barbeariabrothers;
 
 public class HelperClass {
 
-    String name, username, password;
+    String name, email, password;
 
     public HelperClass() {
     }
-    public HelperClass(String name, String username, String password) {
+    public HelperClass(String name, String email, String password) {
         this.name = name;
-        this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -19,11 +19,11 @@ public class HelperClass {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

@@ -34,6 +34,7 @@ public class SplashAgendado extends AppCompatActivity {
                 Intent intent = new Intent(SplashAgendado.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                BarberAdapter.ID = "null";
             }
         };
         handler.postDelayed(runnable, 2000);

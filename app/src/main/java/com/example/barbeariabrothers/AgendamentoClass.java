@@ -2,82 +2,103 @@ package com.example.barbeariabrothers;
 
 public class AgendamentoClass {
     String day, month, year, id;
-    String username, barber, service;
+    String clientID, barberID, serviceID;
+    String hour, status;
+    int statusID;
 
-    public AgendamentoClass(String id){
+    public AgendamentoClass(String day, String month, String year, String id, String clientID, String barberID, String serviceID, String hour, String status, int statusID) {
+        this.day = day;
+        this.month = month;
+        this.year = year;
         this.id = id;
-    }
-    public AgendamentoClass(String day, String month, String year, String username, String barber, String service) {
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        this.username = username;
-        this.barber = barber;
-        this.service = service;
+        this.clientID = clientID;
+        this.barberID = barberID;
+        this.serviceID = serviceID;
+        this.hour = hour;
+        this.status = status;
+        this.statusID = statusID;
     }
 
-    public AgendamentoClass(String day, String month, String barber, String service) {
-        this.day = day;
-        this.month = month;
-        this.barber = barber;
-        this.service = service;
+    public AgendamentoClass() {
     }
-
-    public AgendamentoClass(String day, String month, String year, String username, String service){
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        this.username = username;
-        this.service = service;
-    }
-
 
     public String getDay() {
         return day;
-    }
-    public void setDay(String day) {
-        this.day = day;
     }
 
     public String getMonth() {
         return month;
     }
-    public void setMonth(String month) {
-        this.month = month;
-    }
 
     public String getYear() {
         return year;
     }
-    public void setYear(String year) {
-        this.year = year;
+
+    public String getClientID() {
+        return clientID;
     }
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
+    public String getBarberID() {
+        return barberID;
     }
 
-    public String getBarber() {
-        return barber;
-    }
-    public void setBarber(String barber) {
-        this.barber = barber;
-    }
-
-    public String getService() {
-        return service;
-    }
-    public void setService(String service) {
-        this.service = service;
+    public String getServiceID() {
+        return serviceID;
     }
 
     public String getId() {
         return id;
     }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public int getStatusID() {
+        return statusID;
+    }
+
+    public void setStatusID(int statusID) {
+        this.statusID = statusID;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setClientID(String clientID) {
+        this.clientID = clientID;
+    }
+
+    public void setBarberID(String barberID) {
+        this.barberID = barberID;
+    }
+
+    public void setServiceID(String serviceID) {
+        this.serviceID = serviceID;
     }
 }

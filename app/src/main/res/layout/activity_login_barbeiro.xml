@@ -56,7 +56,7 @@
                 android:drawableStart="@drawable/baseline_alternate_email_24"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/dark_gray"
-                android:hint="@string/email_hint"
+                android:hint="username"
                 android:inputType="text|textEmailAddress"
                 android:padding="8dp"
                 android:textColor="@color/dark_gray"
