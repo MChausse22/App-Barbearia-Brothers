@@ -28,16 +28,25 @@ Para isso, desenvolvemos um aplicativo para a plataforma Android e utilizamos fe
 - Consultar agendamentos existentes
 
 ## Instruções de uso
+<img src="https://github.com/user-attachments/assets/c4295d5b-f696-4c72-9de0-bfbd39df5b21" height="500px">
+
 O aplicativo contém 2 módulos. No módulo cliente, o usuário consulta ou realiza o agendamento dos serviços disponíveis.
 
 Já no módulo barbeiro, o usuário consulta os serviços agendados para o barbeiro logado e pode finalizar os agendamentos.
 - ### Cadastro de usuário
+<img src="https://github.com/user-attachments/assets/8d8f4fe5-0796-422c-80bb-2d9c758db612" height="500px">
+
   #### Campos
   - **nome:** Campo não-nulo.
   - **e-mail:** Este campo deve ser preenchido no padrão de e-mail. ***Ex.:*** *example@gmail.com* | Campo não-nulo | Utilizado para autenticação
   - **password:** Este campo deve ser preenchido com no mínimo 6 caracteres | Utilizado para autenticação
   Caso o cadastro tenha sido bem-sucedido, o aplicativo entra na Home do módulo Cliente
 - ### Módulo Cliente
+<img src="https://github.com/user-attachments/assets/bc647006-e12d-4b13-8c45-7a0ad6b63ac5" height="500px">
+<img src="https://github.com/user-attachments/assets/26cdd732-aaac-4c7b-9102-2157648407fc" height="500px">
+<img src="https://github.com/user-attachments/assets/5331510c-135d-4a68-bde0-c822022e177e" height="500px">
+<img src="https://github.com/user-attachments/assets/08aaf0bd-2e64-47cb-92ef-669919316d83" height="500px">
+  
   #### Consulta de agendamentos
   Na tela inicial está presente a consulta dos agendamentos realizados, onde o usuário pode filtrá-los de acordo com seu status: Confirmado, Finalizado e Cancelado.
   Os agendamentos são exibidos em ordem ascendente de data.
@@ -56,7 +65,10 @@ Já no módulo barbeiro, o usuário consulta os serviços agendados para o barbe
   #### Sign out
   Clique no ícone localizado no canto superior esquerdo para desconectar-se.
   Se o usuário não for desconectado, continuará logado mesmo após o reinício do aplicativo.
+  
 - ### Módulo Barbeiro
+<img src="https://github.com/user-attachments/assets/fd6a3dbf-b995-4ed6-8813-d30124d73bf0" height="500px">
+  
   #### Consulta de agendamentos
   Na tela inicial está presente a consulta dos agendamentos feitos para o barbeiro logado. É possível filtrar de acordo com seu status: Confirmado, Finalizado e Cancelado.
   #### Finalizar atendimento
