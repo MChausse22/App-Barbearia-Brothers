@@ -44,7 +44,6 @@ Já no módulo barbeiro, o usuário consulta os serviços agendados para o barbe
 - ### Módulo Cliente
 <img src="https://github.com/user-attachments/assets/bc647006-e12d-4b13-8c45-7a0ad6b63ac5" height="500px">
 <img src="https://github.com/user-attachments/assets/26cdd732-aaac-4c7b-9102-2157648407fc" height="500px">
-<img src="https://github.com/user-attachments/assets/5331510c-135d-4a68-bde0-c822022e177e" height="500px">
 <img src="https://github.com/user-attachments/assets/08aaf0bd-2e64-47cb-92ef-669919316d83" height="500px">
   
   #### Consulta de agendamentos
