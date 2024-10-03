@@ -69,7 +69,16 @@ Já no módulo barbeiro, o usuário consulta os serviços agendados para o barbe
   
 - ## Módulo Barbeiro
 <img src="https://github.com/user-attachments/assets/fd6a3dbf-b995-4ed6-8813-d30124d73bf0" height="500px">
-  
+
+  ### Credenciais de teste
+  ***Barbeiro 1***
+  - Login: 1
+  - Senha: senha
+
+  ***Barbeiro 2***
+  - Login: 2
+  - Senha: senha
+
   ### Consulta de agendamentos
   Na tela inicial está presente a consulta dos agendamentos feitos para o barbeiro logado. É possível filtrar de acordo com seu status: Confirmado, Finalizado e Cancelado.
   ### Finalizar atendimento
