@@ -7,6 +7,8 @@ O projeto foi desenvolvido para a disciplina de Engenharia de Software III duran
 
 Para isso, desenvolvemos um aplicativo para a plataforma Android e utilizamos ferramentas do Firebase para o banco de dados.
 
+Muitas coisas ainda podem ser aprimoradas, bem como novas funcionalidades adicionadas. Contribuições são bem-vindas!
+
 # Tabela de conteúdos
 * [Features](#features)
 * [Instruções de uso](#instruções-de-uso)
